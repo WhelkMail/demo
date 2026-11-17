@@ -87,25 +87,25 @@ export const accounts: Account[] = [
 ]
 
 export const labels: Label[] = [
-  { id: 'l-work', name: 'Lavoro', color: 'blue', createdAt: '2025-01-10T09:10:00.000Z' },
-  { id: 'l-projects', name: 'Progetti', color: 'emerald', createdAt: '2025-01-10T09:11:00.000Z' },
-  { id: 'l-read', name: 'Da leggere', color: 'amber', createdAt: '2025-01-10T09:12:00.000Z' },
-  { id: 'l-invoices', name: 'Fatture', color: 'rose', createdAt: '2025-01-10T09:13:00.000Z' },
+  { id: 'l-work', name: 'Work', color: 'blue', createdAt: '2025-01-10T09:10:00.000Z' },
+  { id: 'l-projects', name: 'Projects', color: 'emerald', createdAt: '2025-01-10T09:11:00.000Z' },
+  { id: 'l-read', name: 'To read', color: 'amber', createdAt: '2025-01-10T09:12:00.000Z' },
+  { id: 'l-invoices', name: 'Invoices', color: 'rose', createdAt: '2025-01-10T09:13:00.000Z' },
 ]
 
 export const contacts: Contact[] = [
-  { id: 'c-1', name: 'Luca Bianchi', email: 'luca.bianchi@example.org', note: 'Cliente', createdAt: '2025-02-01T10:00:00.000Z' },
+  { id: 'c-1', name: 'Luca Bianchi', email: 'luca.bianchi@example.org', note: 'Customer', createdAt: '2025-02-01T10:00:00.000Z' },
   { id: 'c-2', name: 'Sara Conti', email: 'sara.conti@example.org', note: 'Design', createdAt: '2025-02-02T10:00:00.000Z' },
   { id: 'c-3', name: 'Giulia Verdi', email: 'giulia.verdi@example.net', note: '', createdAt: '2025-02-03T10:00:00.000Z' },
-  { id: 'c-4', name: 'Fatture Studio', email: 'fatture@example.org', note: 'Amministrazione', createdAt: '2025-02-04T10:00:00.000Z' },
-  { id: 'c-5', name: 'Cliente Demo', email: 'cliente@example.org', note: '', createdAt: '2025-02-05T10:00:00.000Z' },
+  { id: 'c-4', name: 'Billing Studio', email: 'billing@example.org', note: 'Accounting', createdAt: '2025-02-04T10:00:00.000Z' },
+  { id: 'c-5', name: 'Demo Customer', email: 'cliente@example.org', note: '', createdAt: '2025-02-05T10:00:00.000Z' },
 ]
 
 export const filters: MailFilter[] = [
   {
     id: 'f-1',
-    name: 'Fatture',
-    from: 'fatture@example.org',
+    name: 'Invoices',
+    from: 'billing@example.org',
     to: null,
     subject: null,
     hasWords: null,
@@ -210,10 +210,10 @@ export const seedMessages: MessageDetail[] = [
     threadKey: 't-contract',
     from: { name: 'Luca Bianchi', email: 'luca.bianchi@example.org' },
     to: [{ name: 'Mario Rossi', email: 'mario@example.com' }],
-    subject: 'Rinnovo contratto annuale',
+    subject: 'Annual contract renewal',
     date: hoursAgo(74),
     text:
-      'Ciao Mario,\n\nti confermo che il contratto scade il 30 novembre. Possiamo rivederlo insieme la prossima settimana?\n\nLuca',
+      'Hi Mario,\n\njust confirming that the contract expires on November 30. Can we review it together next week?\n\nLuca',
     labelIds: ['l-work'],
   }),
   makeMessage(imap, {
@@ -223,11 +223,11 @@ export const seedMessages: MessageDetail[] = [
     from: { name: 'Sara Conti', email: 'sara.conti@example.org' },
     to: [{ name: 'Mario Rossi', email: 'mario@example.com' }],
     cc: [{ name: 'Luca Bianchi', email: 'luca.bianchi@example.org' }],
-    subject: 'Re: Rinnovo contratto annuale',
+    subject: 'Re: Annual contract renewal',
     date: hoursAgo(2),
     unread: true,
     text:
-      'Perfetto, ho aggiunto le modifiche al punto 3 e allegato la versione aggiornata.\n\nFatemi sapere se va bene per voi.\n\nSara',
+      'Perfect, I added the changes to point 3 and attached the updated version.\n\nLet me know if that works for you.\n\nSara',
     labelIds: ['l-work'],
   }),
   makeMessage(imap, {
@@ -235,18 +235,18 @@ export const seedMessages: MessageDetail[] = [
     folder: 'inbox',
     threadKey: 't-welcome',
     from: { name: 'WhelkMail', email: 'hello@example.com' },
-    subject: 'Benvenuto in WhelkMail',
+    subject: 'Welcome to WhelkMail',
     date: hoursAgo(5),
     unread: true,
     text:
-      'Questa è una demo statica: i messaggi sono finti e nessun dato viene inviato a un server. Esplora inbox, lettura, etichette, ricerca e composizione.',
+      'This is a static demo: the messages are fake and no data is sent to a server. Explore the inbox, the reading pane, labels, search and compose.',
     labelIds: ['l-read'],
     html:
       '<div style="font-family:Inter,Arial,sans-serif;color:#1f2937;line-height:1.6">' +
-      '<h1 style="margin:0 0 12px;font-size:22px">Benvenuto in WhelkMail</h1>' +
-      '<p>Questa è una <strong>demo statica</strong>: i messaggi sono finti e nessun dato viene inviato a un server.</p>' +
-      '<p>Prova la lettura, le etichette, la ricerca e la composizione.</p>' +
-      '<p style="color:#6b7280;font-size:12px">Le immagini remote sono bloccate per impostazione predefinita.</p>' +
+      '<h1 style="margin:0 0 12px;font-size:22px">Welcome to WhelkMail</h1>' +
+      '<p>This is a <strong>static demo</strong>: the messages are fake and no data is sent to a server.</p>' +
+      '<p>Try the reading pane, labels, search and compose.</p>' +
+      '<p style="color:#6b7280;font-size:12px">Remote images are blocked by default.</p>' +
       '<img src="https://tracker.example.com/pixel.png" width="1" height="1" alt="" style="display:block">' +
       '</div>',
   }),
@@ -254,15 +254,15 @@ export const seedMessages: MessageDetail[] = [
     id: 'm-invoice',
     folder: 'inbox',
     threadKey: 't-invoice',
-    from: { name: 'Fatture Studio', email: 'fatture@example.org' },
-    subject: 'Fattura 2026-041',
+    from: { name: 'Billing Studio', email: 'billing@example.org' },
+    subject: 'Invoice 2026-041',
     date: hoursAgo(9),
-    text: 'Buongiorno,\nin allegato la fattura 2026-041.\n\nGrazie,\nFatture Studio',
+    text: 'Hello,\nplease find invoice 2026-041 attached.\n\nThanks,\nBilling Studio',
     labelIds: ['l-invoices'],
     attachments: [
       {
         index: 0,
-        filename: 'fattura-2026-041.pdf',
+        filename: 'invoice-2026-041.pdf',
         contentType: 'application/pdf',
         size: 48_123,
       },
@@ -273,9 +273,9 @@ export const seedMessages: MessageDetail[] = [
     folder: 'inbox',
     threadKey: 't-deploy',
     from: { name: 'GitHub', email: 'notifications@example.com' },
-    subject: 'Deploy completato',
+    subject: 'Deploy completed',
     date: hoursAgo(20),
-    text: 'Il workflow "deploy" è terminato con successo sul branch main.',
+    text: 'The "deploy" workflow finished successfully on branch main.',
     labelIds: ['l-work'],
   }),
   makeMessage(imap, {
@@ -283,10 +283,10 @@ export const seedMessages: MessageDetail[] = [
     folder: 'inbox',
     threadKey: 't-lunch',
     from: { name: 'Giulia Verdi', email: 'giulia.verdi@example.net' },
-    subject: 'Pranzo giovedì?',
+    subject: 'Lunch on Thursday?',
     date: hoursAgo(28),
     unread: true,
-    text: 'Ciao! Ti va un pranzo giovedì verso le 13? Conosco un posto carino in centro.',
+    text: 'Hi! Want to grab lunch on Thursday around 1pm? I know a nice place downtown.',
     labelIds: ['l-projects'],
   }),
   makeMessage(imap, {
@@ -294,9 +294,9 @@ export const seedMessages: MessageDetail[] = [
     folder: 'inbox',
     threadKey: 't-usage',
     from: { name: 'Cloudflare', email: 'billing@example.com' },
-    subject: 'Riepilogo utilizzo mensile',
+    subject: 'Monthly usage summary',
     date: hoursAgo(40),
-    text: 'Il tuo utilizzo di questo mese rientra nei limiti del piano. Nessuna azione richiesta.',
+    text: 'Your usage this month is within the plan limits. No action required.',
     labelIds: ['l-work'],
   }),
   makeMessage(imap, {
@@ -304,15 +304,15 @@ export const seedMessages: MessageDetail[] = [
     folder: 'inbox',
     threadKey: 't-design',
     from: { name: 'Design Weekly', email: 'news@example.com' },
-    subject: 'Le 10 tendenze UI del 2026',
+    subject: 'Top 10 UI trends for 2026',
     date: hoursAgo(52),
-    text: 'Una selezione delle tendenze di interfaccia più interessanti dell’anno.',
+    text: 'A selection of the most interesting interface trends of the year.',
     labelIds: ['l-read'],
     html:
       '<div style="font-family:Georgia,serif;color:#111827;line-height:1.7">' +
-      '<h2 style="font-family:Inter,Arial,sans-serif;margin:0 0 12px">Le 10 tendenze UI del 2026</h2>' +
-      '<p>Una selezione delle tendenze di interfaccia più interessanti dell’anno.</p>' +
-      '<ul><li>Interfacce calme e tipografia generosa</li><li>Contenuti densi ma leggibili</li><li>Movimento discreto</li></ul>' +
+      '<h2 style="font-family:Inter,Arial,sans-serif;margin:0 0 12px">Top 10 UI trends for 2026</h2>' +
+      '<p>A selection of the most interesting interface trends of the year.</p>' +
+      '<ul><li>Calm interfaces and generous typography</li><li>Dense but readable content</li><li>Subtle motion</li></ul>' +
       '<img src="https://tracker.example.com/open.gif" width="1" height="1" alt="">' +
       '</div>',
   }),
@@ -322,9 +322,9 @@ export const seedMessages: MessageDetail[] = [
     threadKey: 't-sent-contract',
     from: { name: 'Mario Rossi', email: 'mario@example.com' },
     to: [{ name: 'Luca Bianchi', email: 'luca.bianchi@example.org' }],
-    subject: 'Re: Rinnovo contratto annuale',
+    subject: 'Re: Annual contract renewal',
     date: hoursAgo(70),
-    text: 'Ciao Luca,\nperfetto, ci sentiamo la prossima settimana.\n\nMario',
+    text: 'Hi Luca,\nsounds good, let\'s talk next week.\n\nMario',
     status: 'sent',
     labelIds: ['l-work'],
   }),
@@ -333,16 +333,16 @@ export const seedMessages: MessageDetail[] = [
     folder: 'sent',
     threadKey: 't-sent-invoice',
     from: { name: 'Mario Rossi', email: 'mario@example.com' },
-    to: [{ name: 'Cliente Demo', email: 'cliente@example.org' }],
-    subject: 'Fattura 2026-040',
+    to: [{ name: 'Demo Customer', email: 'cliente@example.org' }],
+    subject: 'Invoice 2026-040',
     date: hoursAgo(96),
-    text: 'Buongiorno,\nin allegato la fattura 2026-040.\n\nCordiali saluti,\nMario Rossi',
+    text: 'Hello,\nplease find invoice 2026-040 attached.\n\nBest regards,\nMario Rossi',
     status: 'sent',
     labelIds: ['l-invoices'],
     attachments: [
       {
         index: 0,
-        filename: 'fattura-2026-040.pdf',
+        filename: 'invoice-2026-040.pdf',
         contentType: 'application/pdf',
         size: 52_004,
       },
@@ -354,9 +354,9 @@ export const seedMessages: MessageDetail[] = [
     threadKey: 't-draft-proposal',
     from: { name: 'Mario Rossi', email: 'mario@example.com' },
     to: [{ name: 'Sara Conti', email: 'sara.conti@example.org' }],
-    subject: 'Proposta progetto — bozza',
+    subject: 'Project proposal — draft',
     date: hoursAgo(1),
-    text: 'Ciao Sara,\nti mando una prima bozza della proposta. Manca ancora la parte sui tempi.',
+    text: 'Hi Sara,\nhere is a first draft of the proposal. The timeline section is still missing.',
     status: 'draft',
     labelIds: ['l-projects'],
   }),
@@ -365,33 +365,33 @@ export const seedMessages: MessageDetail[] = [
     folder: 'spam',
     threadKey: 't-spam',
     from: { name: 'Promo', email: 'promo@example.biz' },
-    subject: 'Hai vinto un premio!',
+    subject: 'You won a prize!',
     date: hoursAgo(30),
     unread: true,
-    text: 'Clicca qui per riscattare il tuo premio. Nessun dato reale è coinvolto in questa demo.',
+    text: 'Click here to claim your prize. No real data is involved in this demo.',
   }),
   makeMessage(relay, {
     id: 'r-order',
     folder: 'inbox',
     threadKey: 't-order',
-    from: { name: 'Cliente Demo', email: 'cliente@example.org' },
+    from: { name: 'Demo Customer', email: 'cliente@example.org' },
     to: [{ name: 'Atelier', email: 'hello@atelier.example' }],
-    subject: 'Ordine #1042',
+    subject: 'Order #1042',
     date: hoursAgo(4),
     unread: true,
     text:
-      'Buongiorno,\nvorrei confermare l’ordine #1042 e chiedere se è possibile aggiungere una nota in fattura.\n\nGrazie!',
+      'Hello,\nI would like to confirm order #1042 and ask whether a note can be added to the invoice.\n\nThanks!',
     labelIds: ['l-work'],
   }),
   makeMessage(relay, {
     id: 'r-quote',
     folder: 'inbox',
     threadKey: 't-quote',
-    from: { name: 'Fornitore Stampe', email: 'fornitore@example.net' },
+    from: { name: 'Print Supplier', email: 'fornitore@example.net' },
     to: [{ name: 'Atelier', email: 'hello@atelier.example' }],
-    subject: 'Preventivo stampe',
+    subject: 'Print quote',
     date: hoursAgo(22),
-    text: 'In allegato il preventivo per la stampa del catalogo. Restiamo a disposizione.',
+    text: 'Please find the quote for printing the catalogue attached. We remain at your disposal.',
   }),
 ]
 
