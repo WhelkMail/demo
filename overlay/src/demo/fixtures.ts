@@ -31,7 +31,7 @@ export const accounts: Account[] = [
     authType: 'password',
     oauthProvider: null,
     connected: true,
-    signature: 'Mario Rossi\n+39 000 000 0000',
+    signature: 'Mario Rossi\n+1 555 0100',
     incomingLabelId: null,
     archiveImapBodies: false,
     imapArchiveDriver: 'r2',
@@ -122,7 +122,7 @@ export const filters: MailFilter[] = [
 ]
 
 export const settings: AppSettings = {
-  defaultSignature: 'Mario Rossi\n+39 000 000 0000',
+  defaultSignature: 'Mario Rossi\n+1 555 0100',
   signatureMode: 'shared',
   allowRemoteImages: false,
   metadataRetentionDays: 90,
