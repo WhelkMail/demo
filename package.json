@@ -1,0 +1,11 @@
+{
+  "name": "whelkmail-demo",
+  "private": true,
+  "type": "module",
+  "description": "Static, backend-free demo of the WhelkMail webmail client",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name whelkmail-demo"
+  }
+}
