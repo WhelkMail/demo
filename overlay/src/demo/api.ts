@@ -65,6 +65,18 @@ function nowIso(): string {
   return new Date().toISOString()
 }
 
+function textOrNull(value: unknown, fallback: string | null = null): string | null {
+  if (value === undefined) return fallback
+  return typeof value === 'string' ? value.trim() || null : null
+}
+
+function stringList(value: unknown, fallback: string[]): string[] {
+  if (value === undefined) return fallback
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : []
+}
+
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), { status, headers: jsonHeaders })
 }
@@ -123,7 +135,7 @@ function listThreads(query: URLSearchParams): ThreadListResult {
 
   const groups = new Map<string, MessageDetail[]>()
   for (const message of state.messages) {
-    if (message.folder !== folder) continue
+    if (!labelId && message.folder !== folder) continue
     if (accountId !== 'all' && message.accountId !== accountId) continue
     if (labelId && !message.labelIds.includes(labelId)) continue
     const key = `${message.accountId}:${message.threadKey ?? message.id}`
@@ -388,6 +400,7 @@ function accountFromInput(input: AccountCreateInput): Account {
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: false,
+    syncIntervalMinutes: 5,
     sentFolder: 'Sent',
     autoSavesSent: input.autoSavesSent ?? true,
     sentCopyAccountId: input.sentCopyAccountId ?? null,
@@ -428,6 +441,10 @@ function handle(
     note?: unknown
     color?: unknown
     from?: unknown
+    hasWords?: unknown
+    doesntHave?: unknown
+    hasAttachment?: unknown
+    forwardTo?: unknown
     labelIds?: unknown
     enabled?: unknown
   },
@@ -630,17 +647,17 @@ function handle(
     if (method === 'POST') {
       const filter: MailFilter = {
         id: newId('f'),
-        name: typeof body.name === 'string' ? body.name : 'Filter',
-        from: typeof body.from === 'string' ? body.from : null,
-        to: null,
-        subject: null,
-        hasWords: null,
-        doesntHave: null,
-        hasAttachment: false,
-        labelIds: Array.isArray(body.labelIds)
-          ? body.labelIds.filter((id): id is string => typeof id === 'string')
-          : [],
-        forwardTo: [],
+        accountId: typeof body.accountId === 'string' ? body.accountId : '',
+        autoLabel: false,
+        name: typeof body.name === 'string' && body.name.trim() ? body.name : 'Filter',
+        from: textOrNull(body.from),
+        to: textOrNull(body.to),
+        subject: textOrNull(body.subject),
+        hasWords: textOrNull(body.hasWords),
+        doesntHave: textOrNull(body.doesntHave),
+        hasAttachment: body.hasAttachment === true,
+        labelIds: stringList(body.labelIds, []),
+        forwardTo: stringList(body.forwardTo, []),
         enabled: body.enabled !== false,
         createdAt: nowIso(),
         lastForwardStatus: null,
@@ -653,6 +670,10 @@ function handle(
     return json({ filters: state.filters })
   }
 
+  if (path === '/api/filters/apply' && method === 'POST') {
+    return json({ processed: 0, matched: 0, labelled: 0, forwarded: 0, nextCursor: null })
+  }
+
   const filterOne = /^\/api\/filters\/([^/]+)$/.exec(path)
   if (filterOne) {
     const id = decodeURIComponent(filterOne[1])
@@ -661,6 +682,26 @@ function handle(
     if (method === 'DELETE') {
       state.filters.splice(index, 1)
       return json({ ok: true })
+    }
+    if (method === 'PATCH') {
+      const current = state.filters[index]
+      state.filters[index] = {
+        ...current,
+        name: typeof body.name === 'string' && body.name.trim() ? body.name : current.name,
+        from: textOrNull(body.from, current.from),
+        to: textOrNull(body.to, current.to),
+        subject: textOrNull(body.subject, current.subject),
+        hasWords: textOrNull(body.hasWords, current.hasWords),
+        doesntHave: textOrNull(body.doesntHave, current.doesntHave),
+        hasAttachment:
+          typeof body.hasAttachment === 'boolean'
+            ? body.hasAttachment
+            : current.hasAttachment,
+        labelIds: stringList(body.labelIds, current.labelIds),
+        forwardTo: stringList(body.forwardTo, current.forwardTo),
+        enabled: typeof body.enabled === 'boolean' ? body.enabled : current.enabled,
+      }
+      return json({ filter: state.filters[index] })
     }
     return json({ filter: state.filters[index] })
   }

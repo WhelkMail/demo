@@ -37,6 +37,7 @@ export const accounts: Account[] = [
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: true,
+    syncIntervalMinutes: 5,
     sentFolder: 'Sent',
     autoSavesSent: true,
     sentCopyAccountId: null,
@@ -71,6 +72,7 @@ export const accounts: Account[] = [
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: false,
+    syncIntervalMinutes: 5,
     sentFolder: 'Sent',
     autoSavesSent: true,
     sentCopyAccountId: null,
@@ -104,6 +106,8 @@ export const contacts: Contact[] = [
 export const filters: MailFilter[] = [
   {
     id: 'f-1',
+    accountId: '',
+    autoLabel: false,
     name: 'Invoices',
     from: 'billing@example.org',
     to: null,
@@ -119,6 +123,25 @@ export const filters: MailFilter[] = [
     lastForwardError: null,
     lastForwardAt: null,
   },
+  {
+    id: 'f-2',
+    accountId: 'acc-imap',
+    autoLabel: true,
+    name: 'Work',
+    from: null,
+    to: null,
+    subject: null,
+    hasWords: null,
+    doesntHave: null,
+    hasAttachment: false,
+    labelIds: ['l-work'],
+    forwardTo: [],
+    enabled: true,
+    createdAt: '2025-02-11T10:00:00.000Z',
+    lastForwardStatus: null,
+    lastForwardError: null,
+    lastForwardAt: null,
+  },
 ]
 
 export const settings: AppSettings = {
@@ -130,7 +153,7 @@ export const settings: AppSettings = {
 
 export const health: HealthStatus = {
   ok: true,
-  version: '1.0.1',
+  version: '1.2.0',
   driveConfigured: false,
   r2Configured: true,
   relayConfigured: true,
@@ -146,8 +169,8 @@ export const health: HealthStatus = {
 export const storageOptions: StorageOptions = { drive: false, r2: true }
 
 export const updateStatus: UpdateStatus = {
-  installed: '1.0.1',
-  latest: '1.0.1',
+  installed: '1.2.0',
+  latest: '1.2.0',
   releaseName: null,
   releaseUrl: null,
   publishedAt: null,
