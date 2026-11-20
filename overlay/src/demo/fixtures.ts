@@ -206,7 +206,7 @@ export function makeMessage(account: Account, seed: MessageSeed): MessageDetail 
     date: seed.date,
     unread: seed.unread ?? false,
     hasAttachments: seed.hasAttachments ?? attachments.length > 0,
-    status: seed.status ?? 'unknown',
+    status: seed.status ?? 'sent',
     labelIds: seed.labelIds ?? [],
     threadKey: seed.threadKey ?? seed.id,
     threadCount: seed.threadCount,
