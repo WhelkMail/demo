@@ -32,12 +32,18 @@ export const accounts: Account[] = [
     oauthProvider: null,
     connected: true,
     signature: 'Mario Rossi\n+1 555 0100',
+    signatureHtml: '<b>Mario Rossi</b><br>+1 555 0100',
     incomingLabelId: null,
     archiveImapBodies: false,
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: true,
     syncIntervalMinutes: 5,
+    autoReplyEnabled: false,
+    autoReplySubject: 'Out of office',
+    autoReplyBody: 'I am currently out of the office and will reply as soon as possible.',
+    autoReplyBodyHtml:
+      '<p>I am currently out of the office and will reply as soon as possible.</p>',
     sentFolder: 'Sent',
     autoSavesSent: true,
     sentCopyAccountId: null,
@@ -66,13 +72,18 @@ export const accounts: Account[] = [
     authType: 'password',
     oauthProvider: null,
     connected: true,
-    signature: 'Atelier — hello@atelier.example',
+    signature: 'Atelier - hello@atelier.example',
+    signatureHtml: '<b>Atelier</b> - hello@atelier.example',
     incomingLabelId: null,
     archiveImapBodies: false,
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: false,
     syncIntervalMinutes: 5,
+    autoReplyEnabled: false,
+    autoReplySubject: '',
+    autoReplyBody: '',
+    autoReplyBodyHtml: '',
     sentFolder: 'Sent',
     autoSavesSent: true,
     sentCopyAccountId: null,
@@ -95,12 +106,67 @@ export const labels: Label[] = [
   { id: 'l-invoices', name: 'Invoices', color: 'rose', createdAt: '2025-01-10T09:13:00.000Z' },
 ]
 
+function contact(
+  id: string,
+  name: string,
+  email: string,
+  extra: Partial<Contact> = {},
+): Contact {
+  const [firstName = '', ...rest] = name.split(' ')
+  return {
+    id,
+    name,
+    email,
+    note: '',
+    source: 'manual',
+    firstName,
+    lastName: rest.join(' '),
+    company: '',
+    jobTitle: '',
+    phone: '',
+    address: '',
+    website: '',
+    birthday: '',
+    additionalEmails: [],
+    additionalPhones: [],
+    createdAt: '2025-02-01T10:00:00.000Z',
+    ...extra,
+  }
+}
+
 export const contacts: Contact[] = [
-  { id: 'c-1', name: 'Luca Bianchi', email: 'luca.bianchi@example.org', note: 'Customer', createdAt: '2025-02-01T10:00:00.000Z' },
-  { id: 'c-2', name: 'Sara Conti', email: 'sara.conti@example.org', note: 'Design', createdAt: '2025-02-02T10:00:00.000Z' },
-  { id: 'c-3', name: 'Giulia Verdi', email: 'giulia.verdi@example.net', note: '', createdAt: '2025-02-03T10:00:00.000Z' },
-  { id: 'c-4', name: 'Billing Studio', email: 'billing@example.org', note: 'Accounting', createdAt: '2025-02-04T10:00:00.000Z' },
-  { id: 'c-5', name: 'Demo Customer', email: 'cliente@example.org', note: '', createdAt: '2025-02-05T10:00:00.000Z' },
+  contact('c-1', 'Luca Bianchi', 'luca.bianchi@example.org', {
+    note: 'Customer',
+    company: 'Bianchi Studio',
+    jobTitle: 'Owner',
+    phone: '+39 02 1234 5678',
+    address: 'Via Roma 1, Milano',
+    website: 'https://bianchi.example',
+    birthday: '1985-04-12',
+    additionalEmails: ['luca@bianchi.example'],
+    additionalPhones: ['+39 333 111 2222'],
+  }),
+  contact('c-2', 'Sara Conti', 'sara.conti@example.org', {
+    note: 'Design',
+    company: 'Atelier',
+    jobTitle: 'Designer',
+    phone: '+39 06 8765 4321',
+  }),
+  contact('c-3', 'Giulia Verdi', 'giulia.verdi@example.net'),
+  contact('c-4', 'Billing Studio', 'billing@example.org', {
+    note: 'Accounting',
+    company: 'Bianchi Studio',
+    jobTitle: 'Accounting',
+    phone: '+39 02 1234 0000',
+  }),
+  contact('c-5', 'Demo Customer', 'cliente@example.org', {
+    company: 'Example Ltd',
+  }),
+  contact('c-6', 'Newsletter', 'news@example.org', {
+    source: 'auto',
+    firstName: '',
+    lastName: '',
+  }),
 ]
 
 export const filters: MailFilter[] = [
@@ -146,14 +212,22 @@ export const filters: MailFilter[] = [
 
 export const settings: AppSettings = {
   defaultSignature: 'Mario Rossi\n+1 555 0100',
+  defaultSignatureHtml: '<b>Mario Rossi</b><br>+1 555 0100',
   signatureMode: 'shared',
   allowRemoteImages: false,
   metadataRetentionDays: 90,
+  contactAutoAdd: true,
+  autoReplyMode: 'shared',
+  autoReplyEnabled: false,
+  autoReplySubject: 'Out of office',
+  autoReplyBody: 'I am currently out of the office and will reply as soon as possible.',
+  autoReplyBodyHtml:
+    '<p>I am currently out of the office and will reply as soon as possible.</p>',
 }
 
 export const health: HealthStatus = {
   ok: true,
-  version: '1.2.0',
+  version: '1.3.0',
   driveConfigured: false,
   r2Configured: true,
   relayConfigured: true,
@@ -169,8 +243,8 @@ export const health: HealthStatus = {
 export const storageOptions: StorageOptions = { drive: false, r2: true }
 
 export const updateStatus: UpdateStatus = {
-  installed: '1.2.0',
-  latest: '1.2.0',
+  installed: '1.3.0',
+  latest: '1.3.0',
   releaseName: null,
   releaseUrl: null,
   publishedAt: null,

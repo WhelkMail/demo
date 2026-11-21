@@ -274,6 +274,7 @@ function sendMessage(body: {
   bcc?: unknown
   subject?: unknown
   text?: unknown
+  html?: unknown
 }): { ok: boolean; sentFolder?: string } {
   const account =
     state.accounts.find((item) => item.id === body.accountId) ?? state.accounts[0]
@@ -303,9 +304,26 @@ function sendMessage(body: {
     subject: typeof body.subject === 'string' ? body.subject : '(no subject)',
     date: nowIso(),
     text: typeof body.text === 'string' ? body.text : '',
+    html: typeof body.html === 'string' ? body.html : null,
     status: 'sent',
   })
   state.messages.push(detail)
+  if (state.settings.contactAutoAdd) {
+    for (const recipient of [...detail.to, ...detail.cc, ...detail.bcc]) {
+      const email = recipient.email.toLowerCase()
+      if (state.contacts.some((contact) => contact.email.toLowerCase() === email)) {
+        continue
+      }
+      state.contacts.push({
+        id: newId('c'),
+        ...contactFromInput({ name: recipient.name ?? email, email }),
+        source: 'auto',
+        firstName: '',
+        lastName: '',
+        createdAt: nowIso(),
+      })
+    }
+  }
   return { ok: true, sentFolder: 'Sent' }
 }
 
@@ -395,12 +413,17 @@ function accountFromInput(input: AccountCreateInput): Account {
     oauthProvider: input.oauthProvider ?? null,
     connected: true,
     signature: '',
+    signatureHtml: '',
     incomingLabelId: null,
     archiveImapBodies: false,
     imapArchiveDriver: 'r2',
     deleteAfterArchive: false,
     autoSync: false,
     syncIntervalMinutes: 5,
+    autoReplyEnabled: false,
+    autoReplySubject: '',
+    autoReplyBody: '',
+    autoReplyBodyHtml: '',
     sentFolder: 'Sent',
     autoSavesSent: input.autoSavesSent ?? true,
     sentCopyAccountId: input.sentCopyAccountId ?? null,
@@ -413,6 +436,34 @@ function accountFromInput(input: AccountCreateInput): Account {
     driveConnected: false,
     r2Available: true,
     createdAt: nowIso(),
+  }
+}
+
+function contactFromInput(
+  body: Record<string, unknown>,
+  existing?: Contact,
+): Omit<Contact, 'id' | 'createdAt'> {
+  const text = (value: unknown, fallback: string) =>
+    typeof value === 'string' ? value : fallback
+  const list = (value: unknown, fallback: string[]) =>
+    Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === 'string')
+      : fallback
+  return {
+    name: text(body.name, existing?.name ?? ''),
+    email: text(body.email, existing?.email ?? '').toLowerCase(),
+    note: text(body.note, existing?.note ?? ''),
+    source: 'manual',
+    firstName: text(body.firstName, existing?.firstName ?? ''),
+    lastName: text(body.lastName, existing?.lastName ?? ''),
+    company: text(body.company, existing?.company ?? ''),
+    jobTitle: text(body.jobTitle, existing?.jobTitle ?? ''),
+    phone: text(body.phone, existing?.phone ?? ''),
+    address: text(body.address, existing?.address ?? ''),
+    website: text(body.website, existing?.website ?? ''),
+    birthday: text(body.birthday, existing?.birthday ?? ''),
+    additionalEmails: list(body.additionalEmails, existing?.additionalEmails ?? []),
+    additionalPhones: list(body.additionalPhones, existing?.additionalPhones ?? []),
   }
 }
 
@@ -603,11 +654,18 @@ function handle(
 
   if (path === '/api/contacts') {
     if (method === 'POST') {
+      const existing = state.contacts.find(
+        (contact) =>
+          contact.email.toLowerCase() ===
+          String(body.email ?? '').trim().toLowerCase(),
+      )
+      if (existing) {
+        Object.assign(existing, contactFromInput(body, existing))
+        return json({ contact: existing })
+      }
       const contact: Contact = {
         id: newId('c'),
-        name: typeof body.name === 'string' ? body.name : '',
-        email: typeof body.email === 'string' ? body.email : '',
-        note: typeof body.note === 'string' ? body.note : '',
+        ...contactFromInput(body),
         createdAt: nowIso(),
       }
       state.contacts.push(contact)
@@ -616,10 +674,46 @@ function handle(
     const needle = (query.get('q') ?? '').toLowerCase()
     const contacts = needle
       ? state.contacts.filter((contact) =>
-          `${contact.name} ${contact.email}`.toLowerCase().includes(needle),
+          [
+            contact.name,
+            contact.email,
+            contact.company,
+            contact.jobTitle,
+            contact.phone,
+          ]
+            .join(' ')
+            .toLowerCase()
+            .includes(needle),
         )
       : state.contacts
     return json({ contacts })
+  }
+
+  if (path === '/api/contacts/import' && method === 'POST') {
+    const inputs = Array.isArray(body.contacts) ? body.contacts : []
+    let imported = 0
+    let updated = 0
+    for (const input of inputs) {
+      if (!input || typeof input !== 'object') continue
+      const data = input as Record<string, unknown>
+      const email = String(data.email ?? '').trim().toLowerCase()
+      if (!email) continue
+      const existing = state.contacts.find(
+        (contact) => contact.email.toLowerCase() === email,
+      )
+      if (existing) {
+        Object.assign(existing, contactFromInput(data, existing))
+        updated += 1
+      } else {
+        state.contacts.push({
+          id: newId('c'),
+          ...contactFromInput(data),
+          createdAt: nowIso(),
+        })
+        imported += 1
+      }
+    }
+    return json({ imported, updated })
   }
 
   const contactOne = /^\/api\/contacts\/([^/]+)$/.exec(path)
@@ -630,9 +724,7 @@ function handle(
     if (method === 'PATCH') {
       state.contacts[index] = {
         ...state.contacts[index],
-        name: typeof body.name === 'string' ? body.name : state.contacts[index].name,
-        email: typeof body.email === 'string' ? body.email : state.contacts[index].email,
-        note: typeof body.note === 'string' ? body.note : state.contacts[index].note,
+        ...contactFromInput(body, state.contacts[index]),
       }
       return json({ contact: state.contacts[index] })
     }
