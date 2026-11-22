@@ -2,7 +2,7 @@ export function installDemoBanner(): void {
   const banner = document.createElement('div')
   banner.setAttribute('role', 'note')
   banner.setAttribute('aria-label', 'This is a static demo with fake data')
-  banner.textContent = 'Demo · fake data, no real connection'
+  banner.textContent = `WhelkMail ${__APP_VERSION__} · demo, fake data`
 
   Object.assign(banner.style, {
     position: 'fixed',
