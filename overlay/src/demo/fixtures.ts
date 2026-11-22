@@ -10,6 +10,7 @@ import type {
   StorageOptions,
   UpdateStatus,
 } from '../../shared/types'
+import { APP_VERSION } from '../../shared/version'
 
 const NOW = Date.now()
 const hoursAgo = (hours: number): string => new Date(NOW - hours * 3_600_000).toISOString()
@@ -227,7 +228,7 @@ export const settings: AppSettings = {
 
 export const health: HealthStatus = {
   ok: true,
-  version: '1.3.0',
+  version: APP_VERSION,
   driveConfigured: false,
   r2Configured: true,
   relayConfigured: true,
@@ -243,8 +244,8 @@ export const health: HealthStatus = {
 export const storageOptions: StorageOptions = { drive: false, r2: true }
 
 export const updateStatus: UpdateStatus = {
-  installed: '1.3.0',
-  latest: '1.3.0',
+  installed: APP_VERSION,
+  latest: APP_VERSION,
   releaseName: null,
   releaseUrl: null,
   publishedAt: null,
