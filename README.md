@@ -4,7 +4,8 @@ A static, backend-free preview of [WhelkMail](https://github.com/WhelkMail/Whelk
 
 You can try the demo on [demo.whelkmail.eu](https://demo.whelkmail.eu)
 
-The demo reuses the real UI but replaces every API call with an in-memory mock.
+The demo reuses the real UI (including the 1.4.0 Workers/Pages/Docker release)
+but replaces every API call with an in-memory mock.
 There is no Pages Function, no D1, no R2, no IMAP/SMTP and no network access:
 the browser cannot reach any mail server or read any real data.
 
@@ -14,7 +15,8 @@ This repository does not copy the application source. The build script:
 
 1. checks out the public source (`WhelkMail/WhelkMail`, `main` by default);
 2. copies only the UI paths (`src`, `shared`, `public`, configs) — never
-   `functions`, `worker`, `db`, `wrangler.toml`, `.dev.vars` or `.env`;
+   `functions`, `server`, `worker`, `db`, `deploy`, `wrangler.toml`,
+   `wrangler.jsonc`, `.dev.vars` or `.env`;
 3. applies the [`overlay/`](overlay) directory:
    - `src/demo-main.tsx` boots the real `App` without the service worker;
    - `src/demo/api.ts` intercepts `window.fetch('/api/*')` and answers from
