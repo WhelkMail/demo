@@ -4,8 +4,8 @@ A static, backend-free preview of [WhelkMail](https://github.com/WhelkMail/Whelk
 
 You can try the demo on [demo.whelkmail.eu](https://demo.whelkmail.eu)
 
-The demo reuses the real UI (including the 1.4.0 Workers/Pages/Docker release)
-but replaces every API call with an in-memory mock.
+The demo reuses the real UI (including the 1.5.0 configuration export/import
+release) but replaces every API call with an in-memory mock.
 There is no Pages Function, no D1, no R2, no IMAP/SMTP and no network access:
 the browser cannot reach any mail server or read any real data.
 

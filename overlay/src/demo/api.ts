@@ -909,6 +909,31 @@ function handle(
     return json({ message })
   }
 
+  if (method === 'POST' && path === '/api/config/export') {
+    return json({
+      format: 'whelkmail-config',
+      version: 1,
+      createdAt: new Date().toISOString(),
+      kdf: { name: 'PBKDF2-SHA256', iterations: 100000, salt: 'ZGVtby1zYWx0LWRlbW8=' },
+      iv: 'ZGVtby1pdi0xMjM=',
+      ciphertext: 'ZGVtby1jaXBoZXJ0ZXh0LWRlbW8=',
+    })
+  }
+
+  if (method === 'POST' && path === '/api/config/import') {
+    return json({
+      ok: true,
+      counts: {
+        accounts: state.accounts.length,
+        labels: state.labels.length,
+        filters: state.filters.length,
+        contacts: state.contacts.length,
+        pushPrefs: 0,
+        settings: 1,
+      },
+    })
+  }
+
   return json({ error: 'Not available in the demo' }, 404)
 }
 
